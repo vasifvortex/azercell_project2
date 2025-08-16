@@ -52,7 +52,9 @@ def train_model(df):
     X = X[numeric_features + categorical_features]
 
     # Split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=0
+    )
 
     # Pipelines for numeric and categorical
     numeric_transformer = Pipeline(
@@ -118,7 +120,9 @@ def ramen_ratings_train_model(df):
     X = X[numeric_features + categorical_features]
 
     # Split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=0
+    )
 
     # Pipelines for numeric and categorical
     numeric_transformer = Pipeline(
@@ -148,7 +152,9 @@ def ramen_ratings_train_model(df):
             ("preprocessor", preprocessor),
             (
                 "classifier",
-                RandomForestClassifier(max_depth=10, min_samples_split=5, n_estimators=400),
+                RandomForestClassifier(
+                    max_depth=10, min_samples_split=5, n_estimators=400
+                ),
             ),
         ]
     )
@@ -170,7 +176,9 @@ def multisim_dataset_train_model(df):
     X = df.drop("target", axis=1)
     y = df["target"]
     X, y = shuffle(X, y, random_state=42)
-    numeric_features = X.columns[X.dtypes == "float64"].append(X.columns[X.dtypes == "int64"])
+    numeric_features = X.columns[X.dtypes == "float64"].append(
+        X.columns[X.dtypes == "int64"]
+    )
     categorical_features = X.columns[X.dtypes == "object"]
 
     numeric_features = list(numeric_features)
@@ -180,7 +188,9 @@ def multisim_dataset_train_model(df):
     X = X[numeric_features + categorical_features]
 
     # Split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=0
+    )
 
     # Pipelines for numeric and categorical
     numeric_transformer = Pipeline(
@@ -212,7 +222,11 @@ def multisim_dataset_train_model(df):
             (
                 "classifier",
                 LogisticRegression(
-                    penalty="l1", C=0.5, solver="liblinear", max_iter=1000, random_state=42
+                    penalty="l1",
+                    C=0.5,
+                    solver="liblinear",
+                    max_iter=1000,
+                    random_state=42,
                 ),
             ),
         ]
@@ -224,7 +238,10 @@ def multisim_dataset_train_model(df):
         ]
     )
     Pipeline(
-        steps=[("preprocessor", preprocessor), ("classifier", KNeighborsClassifier(n_neighbors=5))]
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", KNeighborsClassifier(n_neighbors=5)),
+        ]
     )
     Pipeline(
         steps=[
@@ -253,7 +270,10 @@ def multisim_dataset_train_model(df):
             "random_state": 42,
         }
         clf6 = Pipeline(
-            steps=[("preprocessor", preprocessor), ("classifier", XGBClassifier(**param))]
+            steps=[
+                ("preprocessor", preprocessor),
+                ("classifier", XGBClassifier(**param)),
+            ]
         )
         scores = cross_val_score(clf6, X, y, cv=3, scoring="accuracy")
         return -scores.mean()
@@ -263,7 +283,9 @@ def multisim_dataset_train_model(df):
     print("Best Parameters:", study.best_params)
     # After tuning, train final model with best params
     best_params = study.best_params
-    best_params.update({"use_label_encoder": False, "eval_metric": "logloss", "random_state": 42})
+    best_params.update(
+        {"use_label_encoder": False, "eval_metric": "logloss", "random_state": 42}
+    )
 
     final_pipeline = Pipeline(
         [("preprocessor", preprocessor), ("classifier", XGBClassifier(**best_params))]

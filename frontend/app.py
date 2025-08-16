@@ -1,7 +1,5 @@
 import time
 from io import BytesIO
-import os
-import pickle
 
 import pandas as pd
 import streamlit as st
@@ -16,6 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     page_icon="🤖",
 )
+
 
 # -------------------- Utility Functions --------------------
 def detect_mime(filename: str) -> str:
@@ -42,7 +41,9 @@ def load_df_from_bytes(file_bytes: bytes, filename: str) -> pd.DataFrame | None:
         elif filename.lower().endswith((".xlsx", ".xls")):
             return pd.read_excel(bio)
         else:
-            st.error("Unsupported file format. Please upload a CSV, Excel, or Parquet file.")
+            st.error(
+                "Unsupported file format. Please upload a CSV, Excel, or Parquet file."
+            )
             return None
     except Exception as e:
         st.error(f"Error loading file: {e}")
@@ -57,7 +58,9 @@ def send_to_api(file_bytes: bytes, filename: str, api_url: str) -> dict | None:
         if resp.headers.get("content-type", "").startswith("application/json"):
             data = resp.json()
         else:
-            st.error(f"Unexpected response from API (status {resp.status_code}): {resp.text[:400]}")
+            st.error(
+                f"Unexpected response from API (status {resp.status_code}): {resp.text[:400]}"
+            )
             return None
 
         if resp.status_code == 200:
@@ -121,7 +124,9 @@ def main():
 
     # --- Sidebar ---
     with st.sidebar:
-        st.markdown("<h2>🤖 DataMinds'25 ML Predictor & EDA</h2>", unsafe_allow_html=True)
+        st.markdown(
+            "<h2>🤖 DataMinds'25 ML Predictor & EDA</h2>", unsafe_allow_html=True
+        )
         st.markdown("---")
         api_url = "http://backend:8000/predict"
         uploaded = st.file_uploader(
@@ -132,7 +137,9 @@ def main():
         if uploaded is not None and uploaded != st.session_state.uploaded:
             st.session_state.uploaded = uploaded
             st.session_state.file_bytes = uploaded.getvalue()
-            st.session_state.df = load_df_from_bytes(st.session_state.file_bytes, uploaded.name)
+            st.session_state.df = load_df_from_bytes(
+                st.session_state.file_bytes, uploaded.name
+            )
             st.session_state.results = None
         elif uploaded is None:
             st.session_state.uploaded = None
@@ -167,7 +174,9 @@ def main():
                     n = min(len(preds), len(st.session_state.df))
                     st.session_state.results = pd.DataFrame(st.session_state.df.head(n))
                     st.session_state.results["Prediction"] = preds[:n]
-                    st.success(f"✅ Predictions generated in {round(time.time() - start, 2)}s")
+                    st.success(
+                        f"✅ Predictions generated in {round(time.time() - start, 2)}s"
+                    )
                 else:
                     st.error("Prediction failed.")
 

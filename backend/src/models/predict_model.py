@@ -18,7 +18,6 @@ def load_data(pickle_file_path):
 
 def test_model(model, df):
     X = df.drop("data_compl_usg_local_m1", axis=1)
-    y = df["data_compl_usg_local_m1"]
 
     # Select features same as training
     numeric_features = [
@@ -45,7 +44,6 @@ def test_model(model, df):
 
 
 def ramen_ratings_test_model(model, df):
-    y = df["stars"]
     X = df.drop("stars", axis=1)
 
     numeric_features = X.columns[X.dtypes == "float32"]
@@ -59,11 +57,14 @@ def ramen_ratings_test_model(model, df):
     y_pred = model.predict(X)
     return y_pred.tolist()
 
+
 def multisim_dataset_test_model(model, df):
     X = df.drop("target", axis=1)
     y = df["target"]
     X, y = shuffle(X, y, random_state=42)
-    numeric_features = X.columns[X.dtypes == "float64"].append(X.columns[X.dtypes == "int64"])
+    numeric_features = X.columns[X.dtypes == "float64"].append(
+        X.columns[X.dtypes == "int64"]
+    )
     categorical_features = X.columns[X.dtypes == "object"]
 
     numeric_features = list(numeric_features)
@@ -72,7 +73,8 @@ def multisim_dataset_test_model(model, df):
     X = X[numeric_features + categorical_features]
     y_pred = model.predict(X)
     return y_pred.tolist()
-   
+
+
 def data_usage_production_test():
     base_path = "src/data"
     model_path = "src/models"
@@ -106,19 +108,20 @@ def multisim_dataset_test():
     return list(multisim_dataset_test_model(model, df))
 
 
-def main(file_content,filename: str):
+def main(file_content, filename: str):
     if filename == "data_usage_production.parquet":
-        predictions=data_usage_production_test()
+        predictions = data_usage_production_test()
     elif filename == "ramen-ratings.csv":
-        predictions=ramen_ratings_test()
+        predictions = ramen_ratings_test()
     elif filename == "multisim_dataset.parquet":
-        predictions=multisim_dataset_test()
+        predictions = multisim_dataset_test()
     else:
-         raise HTTPException(
+        raise HTTPException(
             status_code=422,
-            detail="Use datasets: multisim_dataset.parquet, ramen-ratings.csv, data_usage_production.parquet"
+            detail="Use datasets: multisim_dataset.parquet, ramen-ratings.csv, data_usage_production.parquet",
         )
     return predictions
+
 
 if __name__ == "__main__":
     main()
