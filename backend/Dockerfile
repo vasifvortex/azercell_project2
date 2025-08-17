@@ -5,9 +5,11 @@ ENV UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_INSTALL_DIR=/python \
     UV_PYTHON_PREFERENCE=only-managed
 
-# Install build dependencies and clean up in the same layer
+# Install only required build dependencies and clean up in the same layer
 RUN apt-get update -y && \
-    apt-get install --no-install-recommends -y clang git && \
+    apt-get install --no-install-recommends -y python3 python3-pip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
