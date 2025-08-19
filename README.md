@@ -29,8 +29,8 @@ This repository demonstrates a simple MLOps pipeline example created for the Dat
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Elkhn/MLOps_example.git
-   cd MLOps_example
+   git clone https://github.com/vasifvortex/azercell_project2.git
+   cd azercell_project2
    ```
 
 2. **Launch services with Docker Compose**
@@ -94,5 +94,3 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](https:
 ---
 
 *This is a educational example project demonstrating MLOps best practices. For production use, consider additional security, monitoring, and scalability measures.*
-
-**Made with ❤️ for DataMinds'25 students**
